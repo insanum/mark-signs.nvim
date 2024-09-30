@@ -1,0 +1,141 @@
+==============================================================================
+                                                             *mark-signs-nvim*
+View marks in the sign column.
+
+==============================================================================
+CONTENTS                                                      *mark-signs.nvim*
+
+    1. Introduction .................... |mark-signs-introduction|
+    2. Setup ........................... |mark-signs-setup|
+    3. Mappings ........................ |mark-signs-mappings|
+    4. Highlights ...................... |mark-signs-hl|
+    5. License ......................... |mark-signs-license|
+
+==============================================================================
+1. Introduction                                      *mark-signs-introduction*
+
+This plugin enhances Vim's built in marks functionality by showing marks in
+the sign column
+
+This plugin requires Neovim 0.5 or higher. Since this plugin is mainly written
+in lua, it will not work with Vim.
+
+==============================================================================
+2. Setup                                                    *mark-signs-setup*
+
+Setup is done through lua. To initialize the plugin with all of its defaults,
+put the following in your init.vim:
+
+  Example: >
+
+      require('mark-signs').setup({})
+<
+The setup function takes in a table of keys that control the behavior of this
+plugin. The following options are defined:
+
+  builtin_marks: table
+    (default {})
+
+    Which builtin marks to track and show. If set, these marks will also show
+    up in the signcolumn and will update on |CursorMoved|
+
+    See `:help marks` for supported values
+
+    Example: >
+
+      require('mark-signs').setup({
+        builtin_marks = { ".", "^", "`", "'", "\"", "<", ">", "[", "]" }
+      })
+<
+  refresh_interval: integer
+    (default 150)
+
+    How often (in ms) mark-signs.nvim should update the marks list and
+    recompute mark positions and redraw signs. Lower values means that mark
+    positions and signs will refresh much quicker, but may incur a higher
+    performance penalty. Higher values may result in better performance, but
+    may also cause noticable lag in signs updating.
+
+  sign_priority: integer | table
+    (default 10)
+
+    The sign priority to be used for marks. Can be a number in which case the
+    priority applies to all types of marks, or a table with some or all of the
+    following keys:
+
+      lower: sign priority for lowercase marks
+      upper: sign priority for uppercase marks
+      builtin: sign priority for builtin marks
+
+==============================================================================
+3. Mappings                                              *mark-signs-mappings*
+
+The following mappings are defined by default:
+
+    mx              Set mark x
+    dmx             Delete mark x
+
+Mappings can be controlled via the `setup` function, by passing in a mappings
+table, with commands as keys, and the desired mappings as values.
+
+The following are the available keys of the mapping table:
+
+  set                    Set a named mark (will wait for mark input).
+  delete                 Delete a mark (will wait for mark input).
+
+  Example: >
+
+    require('mark-signs').setup {
+      mappings = {
+        set = "n",
+        delete = "dn"
+      }
+    }
+<
+
+  This configures setting mark "a" is done by pressing "na", and deleting mark
+  "a" is done by pressing "dna".
+
+  Mappings can be disabled by setting them to false:
+
+  Example: >
+    require('mark-signs').setup {
+      mappings = {
+        delete = false
+      }
+    }
+<
+Alternatively, <Plug> mappings are provided by mark-signs.nvim, allowing you
+to map keybindings outside of the `setup` function. The following <Plug> mappings
+are provided:
+
+    <Plug>(Mark-signs-set)
+    <Plug>(Mark-signs-delete)
+
+  Example:
+
+    `nmap n <Plug>(Mark-signs-set)`
+
+  This configures setting mark "a" is done with "na".
+
+==============================================================================
+4. Highlights                                                  *mark-signs-hl*
+
+mark-signs.nvim defines the following highlight groups.
+
+*MarkSignsHL*
+  (defaults to |Identifier|)
+
+  The highlight group for displayed mark signs.
+
+*MarkSignsNumHL*
+  (defaults to |LineNr|)
+
+  The highlight group for the number line in a signcolumn.
+
+==============================================================================
+5. License                                                *mark-signs-license*
+
+MIT License
+
+vim:tw=78:ts=2:et:sts=2:sw=2:ft=help
